@@ -1,5 +1,8 @@
 import 'package:clima/services/location.dart';
+import 'package:clima/services/networking.dart';
 import 'package:flutter/material.dart';
+import 'package:clima/screens/location_screen.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -13,22 +16,54 @@ class _LoadingScreenState extends State<LoadingScreen> {
     getLoc();
   }
 
-  void getLoc() async {
+  Future<void> getLoc() async {
     Location userLocation = Location();
     await userLocation.getLocation();
-    if (userLocation.loc) {
-      print(
-        'User longitude: ' + userLocation.getLongitude().toStringAsFixed(2),
-      );
-      print('User latitude: ' + userLocation.getLatitude().toStringAsFixed(2));
-    } else {
-      print(userLocation.msg);
-      print(userLocation.loc);
-    }
+    NetworkHelper apiCall = NetworkHelper(userLocationObject: userLocation);
+    await apiCall.fetchData();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return LocationScreen(apiCallData: apiCall.getData());
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: CircularProgressIndicator()));
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.deepPurple, Colors.black],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Fetching Location...',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white70,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const SpinKitPouringHourGlass(
+                color: Colors.orangeAccent,
+                size: 60.0,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
