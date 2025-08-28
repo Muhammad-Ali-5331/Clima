@@ -1,0 +1,25 @@
+import 'package:clima/services/location.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+const String api_key = '9ab90ee55644cd155fa3ae4116d8fdc0';
+
+class NetworkHelper {
+  Location userLocationObject;
+  var Data;
+  late http.Response response;
+  NetworkHelper({required this.userLocationObject});
+
+  Future<void> fetchData() async {
+    double latitude = userLocationObject.getLatitude();
+    double longitude = userLocationObject.getLongitude();
+    response = await http.get(
+      Uri.parse(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$api_key&units=metric',
+      ),
+    );
+    Data = jsonDecode(response.body);
+  }
+
+  dynamic getData() => Data;
+}
