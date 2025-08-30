@@ -1,5 +1,4 @@
-import 'package:clima/services/location.dart';
-import 'package:clima/services/networking.dart';
+import 'package:clima/services/weather.dart';
 import 'package:flutter/material.dart';
 import 'package:clima/screens/location_screen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -10,22 +9,22 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  dynamic weatherData;
   @override
   void initState() {
     super.initState();
-    getLoc();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getLocation();
+    });
   }
 
-  Future<void> getLoc() async {
-    Location userLocation = Location();
-    await userLocation.getLocation();
-    NetworkHelper apiCall = NetworkHelper(userLocationObject: userLocation);
-    await apiCall.fetchData();
+  getLocation() async {
+    weatherData = await WeatherModel().getLocationByCords();
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
-          return LocationScreen(apiCallData: apiCall.getData());
+          return LocationScreen(apiCallData: weatherData);
         },
       ),
     );
