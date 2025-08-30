@@ -7,6 +7,7 @@ class CityScreen extends StatefulWidget {
 }
 
 class _CityScreenState extends State<CityScreen> {
+  var cityName;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,13 +25,36 @@ class _CityScreenState extends State<CityScreen> {
               Align(
                 alignment: Alignment.topLeft,
                 child: TextButton(
-                  onPressed: () {},
-                  child: Icon(Icons.arrow_back_ios, size: 50.0),
+                  onPressed: () async {
+                    FocusScope.of(context).unfocus(); // closes keyboard
+                    // wait a short delay (200–300 ms is usually enough for keyboard closing)
+                    await Future.delayed(Duration(milliseconds: 300));
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back,
+                    size: 40.0,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-              Container(padding: EdgeInsets.all(20.0), child: null),
+              SizedBox(height: 30.0),
+              Container(
+                padding: EdgeInsets.all(20.0),
+                child: TextField(
+                  onChanged: (val) => cityName = val,
+                  style: TextStyle(color: Colors.black),
+                  decoration: kTextFieldStyle,
+                ),
+              ),
               TextButton(
-                onPressed: () {},
+                onPressed: () async {
+                  FocusScope.of(context).unfocus(); // closes keyboard
+                  // wait a short delay (200–300 ms is usually enough for keyboard closing)
+                  await Future.delayed(Duration(milliseconds: 300));
+
+                  Navigator.pop(context, cityName);
+                },
                 child: Text('Get Weather', style: kButtonTextStyle),
               ),
             ],
