@@ -2,7 +2,7 @@ import 'package:geolocator/geolocator.dart';
 
 class Location {
   bool loc = false;
-  String msg = "👉 getLocation called";
+  String msg = "Null";
 
   double _longitude = 0.0;
   double _latitude = 0.0;
