@@ -38,7 +38,6 @@ class _CityScreenState extends State<CityScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 30.0),
               Container(
                 padding: EdgeInsets.all(20.0),
                 child: TextField(
